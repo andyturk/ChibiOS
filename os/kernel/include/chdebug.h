@@ -237,7 +237,7 @@ extern "C" {
   void dbg_trace(Thread *otp);
 #endif
 #if CH_DBG_ENABLED
-  void chDbgPanic(char *msg);
+  void chDbgPanic(const char *msg);
 #endif
 #ifdef __cplusplus
 }
