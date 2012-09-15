@@ -162,6 +162,9 @@ Thread *chThdCreateI(void *wsp, size_t size,
              (prio <= HIGHPRIO) && (pf != NULL),
              "chThdCreateI");
   SETUP_CONTEXT(wsp, size, pf, arg);
+#if CH_DBG_ENABLE_STACK_CHECK
+  tp->p_stktop = (stkalign_t*) tp->p_ctx.r13;
+#endif
   return _thread_init(tp, prio);
 }
 

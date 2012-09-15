@@ -83,6 +83,7 @@ void chSysInit(void) {
   static Thread mainthread;
 #if CH_DBG_ENABLE_STACK_CHECK
   extern stkalign_t __main_thread_stack_base__;
+  extern stkalign_t __main_thread_stack_end__;
 #endif
 
   port_init();
@@ -105,6 +106,7 @@ void chSysInit(void) {
   /* This is a special case because the main thread Thread structure is not
      adjacent to its stack area.*/
   currp->p_stklimit = &__main_thread_stack_base__;
+  currp->p_stktop = &__main_thread_stack_end__;
 #endif
   chSysEnable();
 

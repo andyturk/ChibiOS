@@ -114,6 +114,10 @@ struct Thread {
    * @brief Thread stack boundary.
    */
   stkalign_t            *p_stklimit;
+  /**
+   * @brief Top of stack.
+   */
+  stkalign_t            *p_stktop;
 #endif
   /**
    * @brief Current thread state.
