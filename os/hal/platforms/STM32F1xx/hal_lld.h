@@ -187,6 +187,9 @@
 /* There are differences in vector names in the various sub-families,
    normalizing.*/
 #if defined(STM32F10X_XL)
+#if defined(TIM1_UP_IRQn)
+#undef TIM1_UP_IRQn
+#endif
 #define TIM1_BRK_IRQn       TIM1_BRK_TIM9_IRQn
 #define TIM1_UP_IRQn        TIM1_UP_TIM10_IRQn
 #define TIM1_TRG_COM_IRQn   TIM1_TRG_COM_TIM11_IRQn
