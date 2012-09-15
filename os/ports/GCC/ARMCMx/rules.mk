@@ -1,5 +1,9 @@
 # ARM Cortex-Mx common makefile scripts and rules.
 
+ifeq ($(CPPEXT),)
+  CPPEXT = .cpp
+endif
+
 # Output directory and files
 ifeq ($(BUILDDIR),)
   BUILDDIR = build
@@ -36,9 +40,9 @@ LSTDIR    = $(BUILDDIR)/lst
 
 # Object files groups
 ACOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(ACSRC:.c=.o)))
-ACPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ACPPSRC:.cpp=.o)))
+ACPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ACPPSRC:$(CPPEXT)=.o)))
 TCOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(TCSRC:.c=.o)))
-TCPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:.cpp=.o)))
+TCPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:$(CPPEXT)=.o)))
 ASMOBJS   = $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
 OBJS	  = $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
 
@@ -58,7 +62,7 @@ MCFLAGS   = -mcpu=$(MCU)
 ODFLAGS	  = -x --syms
 ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
 CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.c=.lst)) $(DEFS)
-CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:.cpp=.lst)) $(DEFS)
+CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) -Wa,-alms=$(LSTDIR)/$(notdir $(<:$(CPPEXT)=.lst)) $(DEFS)
 ifeq ($(USE_LINK_GC),yes)
   LDFLAGS = $(MCFLAGS) -nostartfiles -T$(LDSCRIPT) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
 else
@@ -117,7 +121,7 @@ endif
 	mkdir -p $(OBJDIR)
 	mkdir -p $(LSTDIR)
 
-$(ACPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
+$(ACPPOBJS) : $(OBJDIR)/%.o : %$(CPPEXT) Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
 	$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
@@ -126,7 +130,7 @@ else
 	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
 endif
 
-$(TCPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
+$(TCPPOBJS) : $(OBJDIR)/%.o : %$(CPPEXT) Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
 	$(CPPC) -c $(CPPFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
